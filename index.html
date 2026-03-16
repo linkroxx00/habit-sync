@@ -423,17 +423,20 @@ function logout(){
 }
 
 // ══════════════════════════════════════════════════════
-//  DATA LAYER
+//  DATA LAYER — habits in localStorage, logs from sheet only
 // ══════════════════════════════════════════════════════
 const EMOJIS=['🏃','💪','📚','🧘','💧','🥗','😴','✍️','🎯','🎨','🎵','🧹','💊','🚴','🌿','🍎','🧠','🌅','☕','🏋️'];
 let selectedEmoji=EMOJIS[0];
 
+// in-memory logs — always loaded fresh from sheet
+let memLogs = { firdaus:{}, amel:{} };
+
 function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
 function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
 function getHabits(u){const v=load('hb_habits_'+u,[]);return Array.isArray(v)?v:[];}
-function getLogs(u){const v=load('hb_logs_'+u,{});return(v&&typeof v==='object'&&!Array.isArray(v))?v:{};}
+function getLogs(u){return(memLogs[u]&&typeof memLogs[u]==='object')?memLogs[u]:{};}
 function setHabits(u,v){save('hb_habits_'+u,Array.isArray(v)?v:[]);}
-function setLogs(u,v){save('hb_logs_'+u,(v&&typeof v==='object'&&!Array.isArray(v))?v:{});}
+function setLogs(u,v){memLogs[u]=(v&&typeof v==='object'&&!Array.isArray(v))?v:{};}
 function myHabits(){return getHabits(currentUser)}
 function myLogs(){return getLogs(currentUser)}
 function partnerHabits(){return getHabits(PARTNER[currentUser])}
@@ -516,7 +519,6 @@ async function pullFromSheets(silent=false){
     ['firdaus','amel'].forEach(u=>{
       if(Array.isArray(d.habits[u]))setHabits(u,d.habits[u]);
       if(d.logs[u]&&typeof d.logs[u]==='object'){
-        // normalize done values — sheet may return 'TRUE'/'FALSE' strings or booleans
         const normalized={};
         Object.keys(d.logs[u]).forEach(date=>{
           normalized[date]={};
@@ -525,12 +527,12 @@ async function pullFromSheets(silent=false){
             if(key.endsWith('_time')){
               normalized[date][key]=String(val);
             } else {
-              // handle all possible formats: boolean true, string 'TRUE', string 'true', number 1
               normalized[date][key]=(val===true||val===1||String(val).toUpperCase()==='TRUE');
             }
           });
         });
-        setLogs(u,normalized);
+        // store in memory only — no localStorage
+        memLogs[u]=normalized;
       }
     });
     setSyncState('connected');
@@ -645,8 +647,7 @@ function renderChecklist(){
 }
 function toggleCheck(id){
   const today=todayKey();
-  // read fresh from localStorage every time
-  const logs=JSON.parse(localStorage.getItem('hb_logs_'+currentUser)||'{}');
+  const logs=getLogs(currentUser);
   if(!logs[today])logs[today]={};
   const was=logs[today][id]||false;
   logs[today][id]=!was;
@@ -656,11 +657,12 @@ function toggleCheck(id){
   } else {
     delete logs[today][id+'_time'];
   }
-  // save directly to localStorage
-  localStorage.setItem('hb_logs_'+currentUser, JSON.stringify(logs));
+  // update in-memory immediately
+  setLogs(currentUser,logs);
   renderChecklist();
   renderProgress();
-  pushToSheets(true);
+  // push to sheet immediately, not silently so we see errors
+  pushToSheets(false);
 }
 
 // ══════════════════════════════════════════════════════
@@ -770,7 +772,7 @@ function showOverlay(msg){document.getElementById('overlayMsg').textContent=msg;
 function hideOverlay(){document.getElementById('syncOverlay').classList.remove('show');}
 let toastTimer;
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600);}
-function clearAllData(){if(!confirm('Clear ALL local data?'))return;['firdaus','amel'].forEach(u=>{setHabits(u,[]);setLogs(u,{});});renderAll();toast('Cleared.');}
+function clearAllData(){if(!confirm('Clear ALL local data?'))return;['firdaus','amel'].forEach(u=>{setHabits(u,[]);memLogs[u]={};});renderAll();toast('Cleared.');}
 
 // ══════════════════════════════════════════════════════
 //  INIT
@@ -799,5 +801,4 @@ function renderAll(){
 </script>
 </body>
 </html>
-
 
