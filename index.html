@@ -15,43 +15,78 @@
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
   body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 80% 10%,rgba(124,106,245,.12) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(200,245,90,.07) 0%,transparent 50%);pointer-events:none;z-index:0}
-  #app{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 20px 60px}
-  header{padding:40px 0 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:28px;flex-wrap:wrap;gap:12px}
-  .logo{font-family:var(--font-head);font-size:2rem;font-weight:900;letter-spacing:-1px}
+
+  /* LOGIN */
+  #loginScreen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+  #loginScreen.hidden{display:none}
+  .login-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:40px;width:100%;max-width:420px;text-align:center}
+  .login-logo{font-family:var(--font-head);font-size:2.4rem;font-weight:900;letter-spacing:-1px;margin-bottom:6px}
+  .login-logo span{color:var(--accent)}
+  .login-sub{font-size:.85rem;color:var(--muted);margin-bottom:32px}
+  .user-select{display:flex;gap:12px;margin-bottom:28px}
+  .user-btn{flex:1;background:var(--surface2);border:2px solid var(--border);border-radius:14px;padding:16px 12px;cursor:pointer;transition:all .2s;text-align:center}
+  .user-btn:hover{border-color:var(--accent2)}
+  .user-btn.selected{border-color:var(--accent);background:rgba(200,245,90,.08)}
+  .user-btn .avatar{font-size:2rem;margin-bottom:6px}
+  .user-btn .uname{font-weight:600;font-size:.9rem}
+  .user-btn .urole{font-size:.72rem;color:var(--muted)}
+  .login-input-wrap{margin-bottom:16px;text-align:left}
+  .login-input-wrap label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+  .pw-wrap{position:relative}
+  .pw-wrap input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 44px 12px 14px;color:var(--text);font-family:var(--font-body);font-size:.95rem;outline:none;transition:border .2s}
+  .pw-wrap input:focus{border-color:var(--accent)}
+  .pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:1rem}
+  .login-err{font-size:.8rem;color:var(--danger);margin-bottom:12px;min-height:20px}
+  .btn-login{width:100%;background:var(--accent);color:#0f0f13;border:none;border-radius:10px;padding:13px;font-family:var(--font-body);font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s}
+  .btn-login:hover{background:#d4ff5f}
+
+  /* MAIN */
+  #mainApp{display:none}
+  #mainApp.visible{display:block}
+  #app{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 20px 60px}
+
+  header{padding:32px 0 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:24px;flex-wrap:wrap;gap:12px}
+  .logo{font-family:var(--font-head);font-size:1.8rem;font-weight:900;letter-spacing:-1px}
   .logo span{color:var(--accent)}
   .header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .date-badge{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:6px 16px;font-size:.82rem;color:var(--muted);font-weight:500}
-  .sync-pill{display:flex;align-items:center;gap:6px;border-radius:100px;padding:6px 14px;font-size:.78rem;font-weight:600;border:1px solid;cursor:pointer;transition:all .2s}
+  .user-badge{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:6px 14px}
+  .user-badge .dot{width:8px;height:8px;border-radius:50%}
+  .user-badge .uname{font-size:.82rem;font-weight:600}
+  .sync-pill{display:flex;align-items:center;gap:6px;border-radius:100px;padding:6px 14px;font-size:.78rem;font-weight:600;border:1px solid;transition:all .2s}
   .sync-pill.connected{background:rgba(200,245,90,.1);border-color:rgba(200,245,90,.3);color:var(--accent)}
   .sync-pill.disconnected{background:rgba(245,90,124,.1);border-color:rgba(245,90,124,.3);color:var(--danger)}
   .sync-pill.syncing{background:rgba(124,106,245,.1);border-color:rgba(124,106,245,.3);color:var(--accent2)}
   .sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
   .sync-pill.syncing .sync-dot{animation:pulse 1s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-  .tabs{display:flex;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px;margin-bottom:32px;width:fit-content;flex-wrap:wrap}
-  .tab-btn{background:none;border:none;color:var(--muted);font-family:var(--font-body);font-size:.85rem;font-weight:500;padding:8px 18px;border-radius:100px;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .btn-logout{background:none;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-family:var(--font-body);font-size:.78rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
+  .btn-logout:hover{border-color:var(--danger);color:var(--danger)}
+
+  .tabs{display:flex;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px;margin-bottom:28px;flex-wrap:wrap}
+  .tab-btn{background:none;border:none;color:var(--muted);font-family:var(--font-body);font-size:.83rem;font-weight:500;padding:8px 16px;border-radius:100px;cursor:pointer;transition:all .2s;white-space:nowrap}
   .tab-btn.active{background:var(--accent);color:#0f0f13;font-weight:600}
   .tab-btn:not(.active):hover{color:var(--text)}
+
   .section{display:none;animation:fadeUp .3s ease}
   .section.active{display:block}
   @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-  .section-title{font-family:var(--font-head);font-size:1.6rem;font-weight:700;margin-bottom:20px}
+  .section-title{font-family:var(--font-head);font-size:1.5rem;font-weight:700;margin-bottom:18px}
   .section-title small{font-family:var(--font-body);font-size:.82rem;font-weight:400;color:var(--muted);display:block;margin-top:4px}
-  .setup-banner{background:linear-gradient(135deg,rgba(124,106,245,.15),rgba(200,245,90,.08));border:1px solid rgba(124,106,245,.3);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;display:flex;align-items:flex-start;gap:14px}
-  .setup-banner .icon{font-size:1.6rem;flex-shrink:0;margin-top:2px}
-  .setup-banner h4{font-size:.95rem;font-weight:600;margin-bottom:6px}
-  .setup-banner p{font-size:.82rem;color:var(--muted);line-height:1.7}
-  .setup-banner a{color:var(--accent2);text-decoration:none}
-  .setup-banner a:hover{text-decoration:underline}
-  .add-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:28px}
+
+  .view-toggle{display:flex;gap:8px;margin-bottom:20px;align-items:center}
+  .view-toggle span{font-size:.78rem;color:var(--muted);margin-right:4px}
+  .vtbtn{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:6px 16px;font-family:var(--font-body);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--muted)}
+  .vtbtn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,245,90,.08)}
+
+  .add-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:24px}
   .form-row{display:flex;gap:10px;flex-wrap:wrap}
   .input-wrap{flex:1;min-width:180px}
   .input-wrap label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-  input[type=text],input[type=url],select,input[type=color]{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:var(--font-body);font-size:.95rem;outline:none;transition:border .2s}
-  input[type=text]:focus,input[type=url]:focus,select:focus{border-color:var(--accent)}
+  input[type=text],select,input[type=color]{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:var(--font-body);font-size:.95rem;outline:none;transition:border .2s}
+  input[type=text]:focus,select:focus{border-color:var(--accent)}
   select option{background:var(--surface2)}
   input[type=color]{height:42px;padding:4px 8px;cursor:pointer}
-  .btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:10px;padding:11px 22px;font-family:var(--font-body);font-size:.92rem;font-weight:600;cursor:pointer;transition:all .2s}
+  .btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:10px;padding:11px 20px;font-family:var(--font-body);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
   .btn-primary{background:var(--accent);color:#0f0f13}
   .btn-primary:hover{background:#d4ff5f;transform:translateY(-1px)}
   .btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
@@ -63,90 +98,139 @@
   .emoji-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
   .emoji-opt{background:var(--surface2);border:2px solid transparent;border-radius:8px;width:36px;height:36px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
   .emoji-opt:hover,.emoji-opt.selected{border-color:var(--accent);background:rgba(200,245,90,.1)}
-  .habit-list-wrap{display:flex;flex-direction:column;gap:12px}
-  .habit-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:16px}
-  .habit-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+
+  .habit-list-wrap{display:flex;flex-direction:column;gap:10px}
+  .habit-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;display:flex;align-items:center;gap:14px}
+  .habit-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
   .habit-info{flex:1;min-width:0}
-  .habit-name{font-weight:600;font-size:1rem;margin-bottom:2px}
-  .habit-meta{font-size:.78rem;color:var(--muted)}
-  .habit-streak{display:flex;align-items:center;gap:5px;font-size:.8rem;color:var(--accent3);font-weight:600}
-  .habit-actions{display:flex;gap:8px}
-  .icon-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;color:var(--muted)}
+  .habit-name{font-weight:600;font-size:.95rem;margin-bottom:2px}
+  .habit-meta{font-size:.76rem;color:var(--muted)}
+  .habit-streak{font-size:.8rem;color:var(--accent3);font-weight:600}
+  .icon-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .2s;color:var(--muted)}
   .icon-btn:hover{border-color:var(--danger);color:var(--danger);background:rgba(245,90,124,.1)}
-  .empty{text-align:center;padding:60px 20px;color:var(--muted)}
+  .readonly-tag{font-size:.68rem;background:rgba(124,106,245,.15);color:var(--accent2);border:1px solid rgba(124,106,245,.3);border-radius:100px;padding:2px 8px;margin-left:6px}
+
+  .empty{text-align:center;padding:50px 20px;color:var(--muted)}
   .empty .big{font-size:3rem;margin-bottom:12px}
-  .checklist-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
-  .check-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .2s;margin-bottom:10px;user-select:none}
-  .check-card:hover{border-color:var(--accent2)}
+
+  .checklist-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+  .check-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;margin-bottom:10px;user-select:none}
+  .check-card.readonly{cursor:default}
+  .check-card:not(.readonly):hover{border-color:var(--accent2)}
   .check-card.done{border-color:var(--accent);background:rgba(200,245,90,.05)}
-  .checkmark{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s}
+  .check-card.partner-done{border-color:var(--accent2);background:rgba(124,106,245,.05)}
+  .checkmark{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;transition:all .2s}
   .check-card.done .checkmark{background:var(--accent);border-color:var(--accent);color:#0f0f13;font-weight:700}
-  .check-label{flex:1;font-weight:500}
+  .check-card.partner-done .checkmark{background:var(--accent2);border-color:var(--accent2);color:#fff;font-weight:700}
+  .check-label{flex:1;font-weight:500;font-size:.9rem}
   .check-card.done .check-label{text-decoration:line-through;color:var(--muted)}
-  .check-time{font-size:.75rem;color:var(--muted)}
-  .progress-ring-wrap{display:flex;justify-content:center;margin-bottom:32px}
-  .progress-ring{position:relative;width:160px;height:160px}
+  .check-time{font-size:.72rem;color:var(--muted)}
+
+  .progress-ring-wrap{display:flex;justify-content:center;gap:40px;margin-bottom:28px;flex-wrap:wrap}
+  .progress-ring{position:relative;width:140px;height:140px;text-align:center}
   .progress-ring svg{transform:rotate(-90deg)}
   .progress-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .progress-ring-text .pct{font-family:var(--font-head);font-size:2.4rem;font-weight:700;line-height:1}
-  .progress-ring-text .lbl{font-size:.7rem;color:var(--muted);margin-top:2px}
-  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
-  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center}
-  .stat-val{font-family:var(--font-head);font-size:1.8rem;font-weight:700}
-  .stat-label{font-size:.75rem;color:var(--muted);margin-top:4px}
-  .habit-progress-item{margin-bottom:16px}
-  .hp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:.88rem}
-  .hp-bar-bg{background:var(--surface2);border-radius:100px;height:8px;overflow:hidden}
+  .progress-ring-text .pct{font-family:var(--font-head);font-size:2rem;font-weight:700;line-height:1}
+  .progress-ring-text .lbl{font-size:.68rem;color:var(--muted);margin-top:2px}
+  .ring-name{text-align:center;font-size:.8rem;font-weight:600;margin-top:8px}
+  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+  .stat-val{font-family:var(--font-head);font-size:1.6rem;font-weight:700}
+  .stat-label{font-size:.72rem;color:var(--muted);margin-top:4px}
+  .habit-progress-item{margin-bottom:14px}
+  .hp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:.85rem}
+  .hp-bar-bg{background:var(--surface2);border-radius:100px;height:7px;overflow:hidden}
   .hp-bar{height:100%;border-radius:100px;transition:width .6s ease}
-  .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-  .cal-month{font-family:var(--font-head);font-size:1.3rem;font-weight:700}
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-  .cal-day-name{text-align:center;font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;padding-bottom:8px;letter-spacing:.04em}
-  .cal-cell{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.82rem;font-weight:500;transition:all .15s;border:1px solid transparent;gap:2px}
+
+  .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .cal-month{font-family:var(--font-head);font-size:1.2rem;font-weight:700}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+  .cal-day-name{text-align:center;font-size:.68rem;font-weight:600;color:var(--muted);text-transform:uppercase;padding-bottom:8px;letter-spacing:.04em}
+  .cal-cell{aspect-ratio:1;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.78rem;font-weight:500;transition:all .15s;border:1px solid transparent;gap:2px}
   .cal-cell.other-month{color:#333}
   .cal-cell.today{border-color:var(--accent);color:var(--accent);font-weight:700}
   .cal-cell.has-data{background:var(--surface);border-color:var(--border)}
   .cal-cell .dot-row{display:flex;gap:2px}
-  .cal-cell .dot{width:5px;height:5px;border-radius:50%}
-  .cal-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:20px}
-  .cal-legend-item{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted)}
-  .cal-legend-dot{width:8px;height:8px;border-radius:50%}
-  .settings-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
-  .settings-card h3{font-size:1rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-  .settings-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .url-input-wrap{flex:1;min-width:240px}
-  .conn-status{font-size:.8rem;margin-top:8px;padding:8px 12px;border-radius:8px}
-  .conn-status.ok{background:rgba(200,245,90,.1);color:var(--accent);border:1px solid rgba(200,245,90,.2)}
-  .conn-status.err{background:rgba(245,90,124,.1);color:var(--danger);border:1px solid rgba(245,90,124,.2)}
-  .conn-status.info{background:rgba(124,106,245,.1);color:var(--accent2);border:1px solid rgba(124,106,245,.2)}
-  .divider{border:none;border-top:1px solid var(--border);margin:20px 0}
-  #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:10px 22px;font-size:.88rem;font-weight:500;opacity:0;transition:all .3s;z-index:999;white-space:nowrap}
+  .cal-cell .dot{width:4px;height:4px;border-radius:50%}
+  .cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px}
+  .cal-legend-item{display:flex;align-items:center;gap:5px;font-size:.75rem;color:var(--muted)}
+  .cal-legend-dot{width:7px;height:7px;border-radius:50%}
+
+  .settings-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px}
+  .settings-card h3{font-size:.95rem;font-weight:600;margin-bottom:14px}
+  .divider{border:none;border-top:1px solid var(--border);margin:18px 0}
+  .info-box{background:rgba(124,106,245,.08);border:1px solid rgba(124,106,245,.2);border-radius:10px;padding:14px 16px;font-size:.82rem;color:var(--muted);line-height:1.6}
+  .info-box strong{color:var(--accent2)}
+
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:10px 22px;font-size:.85rem;font-weight:500;opacity:0;transition:all .3s;z-index:999;white-space:nowrap}
   #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   #syncOverlay{display:none;position:fixed;inset:0;background:rgba(15,15,19,.7);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
   #syncOverlay.show{display:flex}
   .spin-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 36px;text-align:center}
-  .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
+  .spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .spin-card p{font-size:.9rem;color:var(--muted)}
-  code-block{display:block;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:monospace;font-size:.75rem;color:#a8d8a8;overflow-x:auto;white-space:pre;line-height:1.6;max-height:320px;overflow-y:auto}
-  @media(max-width:600px){.form-row{flex-direction:column}.stats-grid{grid-template-columns:repeat(2,1fr)}.tabs{border-radius:var(--radius)}.header{flex-direction:column;align-items:flex-start}}
+  .spin-card p{font-size:.88rem;color:var(--muted)}
+
+  @media(max-width:600px){
+    .form-row{flex-direction:column}
+    .stats-grid{grid-template-columns:repeat(2,1fr)}
+    .tabs{border-radius:var(--radius)}
+    .progress-ring-wrap{gap:20px}
+    .user-select{flex-direction:column}
+  }
 </style>
 </head>
 <body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">habit<span>ly</span></div>
+    <div class="login-sub">Your shared habit tracker</div>
+    <div class="user-select">
+      <div class="user-btn selected" id="ubtn-firdaus" onclick="selectUser('firdaus')">
+        <div class="avatar">🌙</div>
+        <div class="uname">Firdaus</div>
+        <div class="urole">Account 1</div>
+      </div>
+      <div class="user-btn" id="ubtn-amel" onclick="selectUser('amel')">
+        <div class="avatar">🌸</div>
+        <div class="uname">Amel</div>
+        <div class="urole">Account 2</div>
+      </div>
+    </div>
+    <div class="login-input-wrap">
+      <label>Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="pwInput" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()"/>
+        <button class="pw-toggle" onclick="togglePw()">👁</button>
+      </div>
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <button class="btn-login" onclick="doLogin()">Sign In →</button>
+  </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="mainApp">
 <div id="app">
   <header>
     <div class="logo">habit<span>ly</span></div>
     <div class="header-right">
-      <div class="sync-pill disconnected" id="syncPill" onclick="showTab('settings',null)">
-        <div class="sync-dot"></div><span id="syncLabel">Not connected</span>
+      <div class="user-badge">
+        <div class="dot" id="userDot"></div>
+        <span class="uname" id="userNameBadge"></span>
       </div>
-      <div class="date-badge" id="headerDate"></div>
+      <div class="sync-pill connected" id="syncPill">
+        <div class="sync-dot"></div><span id="syncLabel">Sheets connected</span>
+      </div>
+      <button class="btn-logout" onclick="logout()">Sign out</button>
     </div>
   </header>
 
   <nav class="tabs">
     <button class="tab-btn active" onclick="showTab('add',this)">＋ Add Habit</button>
-    <button class="tab-btn" onclick="showTab('list',this)">📋 My Habits</button>
+    <button class="tab-btn" onclick="showTab('list',this)">📋 Habits</button>
     <button class="tab-btn" onclick="showTab('checklist',this)">✅ Today</button>
     <button class="tab-btn" onclick="showTab('calendar',this)">📅 Calendar</button>
     <button class="tab-btn" onclick="showTab('progress',this)">📊 Progress</button>
@@ -155,23 +239,23 @@
 
   <!-- ADD -->
   <section id="tab-add" class="section active">
-    <div class="section-title">Add a New Habit<small>Build consistency, one habit at a time.</small></div>
+    <div class="section-title">Add a New Habit<small>Adding to your own list.</small></div>
     <div class="add-form">
       <div class="form-row">
         <div class="input-wrap">
           <label>Habit Name</label>
           <input type="text" id="habitName" placeholder="e.g. Morning Run" maxlength="40"/>
         </div>
-        <div class="input-wrap" style="max-width:140px">
+        <div class="input-wrap" style="max-width:130px">
           <label>Color</label>
           <input type="color" id="habitColor" value="#c8f55a"/>
         </div>
       </div>
-      <div style="margin-top:16px">
+      <div style="margin-top:14px">
         <label style="font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:8px">Pick an Icon</label>
         <div class="emoji-row" id="emojiPicker"></div>
       </div>
-      <div style="margin-top:16px">
+      <div style="margin-top:14px">
         <div class="input-wrap">
           <label>Frequency</label>
           <select id="habitFreq">
@@ -190,26 +274,41 @@
 
   <!-- LIST -->
   <section id="tab-list" class="section">
-    <div class="section-title">My Habits<small id="habitCount"></small></div>
+    <div class="section-title">Habits<small id="habitCountLabel"></small></div>
+    <div class="view-toggle">
+      <span>Viewing:</span>
+      <button class="vtbtn active" id="vt-mine" onclick="setListView('mine',this)">My Habits</button>
+      <button class="vtbtn" id="vt-partner" onclick="setListView('partner',this)"></button>
+    </div>
     <div class="habit-list-wrap" id="habitList"></div>
   </section>
 
   <!-- CHECKLIST -->
   <section id="tab-checklist" class="section">
     <div class="checklist-header">
-      <div class="section-title" style="margin-bottom:0">Today's Habits<small id="checklistDate"></small></div>
-      <div id="todayPct" style="font-family:var(--font-head);font-size:1.4rem;font-weight:700;color:var(--accent)"></div>
+      <div class="section-title" style="margin-bottom:0">Today<small id="checklistDate"></small></div>
+      <div id="todayPct" style="font-family:var(--font-head);font-size:1.3rem;font-weight:700;color:var(--accent)"></div>
+    </div>
+    <div class="view-toggle">
+      <span>Viewing:</span>
+      <button class="vtbtn active" id="cv-mine" onclick="setCheckView('mine',this)">My Habits</button>
+      <button class="vtbtn" id="cv-partner" onclick="setCheckView('partner',this)"></button>
     </div>
     <div id="checklistItems"></div>
   </section>
 
   <!-- CALENDAR -->
   <section id="tab-calendar" class="section">
-    <div class="section-title">Calendar View<small>See your habit activity over time.</small></div>
+    <div class="section-title">Calendar</div>
+    <div class="view-toggle">
+      <span>Viewing:</span>
+      <button class="vtbtn active" id="calv-mine" onclick="setCalView('mine',this)">My Habits</button>
+      <button class="vtbtn" id="calv-partner" onclick="setCalView('partner',this)"></button>
+    </div>
     <div class="cal-nav">
-      <button class="btn btn-ghost" onclick="calPrev()">← Prev</button>
+      <button class="btn btn-ghost btn-sm" onclick="calPrev()">← Prev</button>
       <div class="cal-month" id="calMonthLabel"></div>
-      <button class="btn btn-ghost" onclick="calNext()">Next →</button>
+      <button class="btn btn-ghost btn-sm" onclick="calNext()">Next →</button>
     </div>
     <div class="cal-grid" id="calGrid"></div>
     <div class="cal-legend" id="calLegend"></div>
@@ -217,174 +316,132 @@
 
   <!-- PROGRESS -->
   <section id="tab-progress" class="section">
-    <div class="section-title">Progress<small>Your overall performance this week.</small></div>
-    <div class="progress-ring-wrap">
-      <div class="progress-ring">
-        <svg width="160" height="160" viewBox="0 0 160 160">
-          <circle cx="80" cy="80" r="68" fill="none" stroke="var(--surface2)" stroke-width="12"/>
-          <circle cx="80" cy="80" r="68" fill="none" stroke="var(--accent)" stroke-width="12"
-            stroke-linecap="round" stroke-dasharray="427" id="progressCircle" stroke-dashoffset="427"/>
-        </svg>
-        <div class="progress-ring-text">
-          <span class="pct" id="progressPct">0%</span>
-          <span class="lbl">this week</span>
-        </div>
-      </div>
-    </div>
+    <div class="section-title">Progress<small>Side-by-side this week</small></div>
+    <div class="progress-ring-wrap" id="progressRings"></div>
     <div class="stats-grid" id="statsGrid"></div>
-    <div class="section-title" style="font-size:1.1rem;margin-bottom:16px">Per-Habit Progress <small>Last 7 days</small></div>
+    <div class="section-title" style="font-size:1rem;margin-bottom:14px">Per-Habit · Last 7 days</div>
+    <div class="view-toggle" style="margin-bottom:14px">
+      <span>Viewing:</span>
+      <button class="vtbtn active" id="pv-mine" onclick="setProgView('mine',this)">My Habits</button>
+      <button class="vtbtn" id="pv-partner" onclick="setProgView('partner',this)"></button>
+    </div>
     <div id="habitProgressBars"></div>
   </section>
 
   <!-- SETTINGS -->
   <section id="tab-settings" class="section">
-    <div class="section-title">Settings<small>Connect Google Sheets as your live database.</small></div>
+    <div class="section-title">Settings</div>
 
-    <div class="setup-banner">
-      <div class="icon">📋</div>
-      <div>
-        <h4>How to connect Google Sheets (one-time setup, ~5 minutes)</h4>
-        <p>
-          1. Go to <a href="https://sheets.google.com" target="_blank">sheets.google.com</a> → create a new blank spreadsheet.<br>
-          2. Click <strong>Extensions → Apps Script</strong>.<br>
-          3. Delete all existing code, paste the code from the box below, then click 💾 Save.<br>
-          4. Click <strong>Deploy → New deployment → Web app</strong>.<br>
-          5. Set <em>Execute as</em>: <strong>Me</strong> · <em>Who has access</em>: <strong>Anyone</strong>.<br>
-          6. Click <strong>Deploy</strong> → copy the Web App URL → paste it below.
-        </p>
+    <div class="settings-card">
+      <h3>☁️ Google Sheets Sync</h3>
+      <div class="info-box">
+        <strong>Connected!</strong> Your data syncs automatically to Google Sheets.<br>
+        Sheet URL is built into this app — no configuration needed.
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+        <button class="btn btn-ghost btn-sm" onclick="pushToSheets(false)">⬆ Push to Sheets</button>
+        <button class="btn btn-ghost btn-sm" onclick="pullFromSheets()">⬇ Pull from Sheets</button>
       </div>
     </div>
 
     <div class="settings-card">
-      <h3>🔗 Paste your Web App URL here</h3>
-      <div class="settings-row">
-        <div class="url-input-wrap">
-          <input type="url" id="sheetUrl" placeholder="https://script.google.com/macros/s/YOUR_ID/exec"/>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="testConnection()">Test</button>
-        <button class="btn btn-primary btn-sm" onclick="saveSheetUrl()">Save &amp; Sync</button>
+      <h3>👀 View Google Sheet</h3>
+      <div class="info-box" style="margin-bottom:14px">
+        Your spreadsheet has 4 tabs:<br>
+        <strong>firdaus_Habits</strong> · <strong>firdaus_Logs</strong> · <strong>amel_Habits</strong> · <strong>amel_Logs</strong>
       </div>
-      <div id="connStatus" class="conn-status info" style="display:none"></div>
-    </div>
-
-    <div class="settings-card">
-      <h3>📜 Apps Script Code — paste this into Apps Script</h3>
-      <div id="scriptBox" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:monospace;font-size:.74rem;color:#a8d8a8;overflow-x:auto;white-space:pre;line-height:1.6;max-height:300px;overflow-y:auto"></div>
-      <div style="margin-top:12px;display:flex;justify-content:flex-end">
-        <button class="btn btn-ghost btn-sm" onclick="copyScript()">📋 Copy Code</button>
-      </div>
-    </div>
-
-    <div class="settings-card">
-      <h3>☁️ Manual Sync</h3>
-      <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Data auto-syncs 2 seconds after each check. Use these buttons to force sync anytime.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-ghost" onclick="pushToSheets(false)">⬆ Push to Sheets</button>
-        <button class="btn btn-ghost" onclick="pullFromSheets()">⬇ Pull from Sheets</button>
-      </div>
+      <a href="https://docs.google.com/spreadsheets" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none">Open Google Sheets ↗</a>
     </div>
 
     <hr class="divider"/>
     <div class="settings-card">
       <h3 style="color:var(--danger)">⚠️ Danger Zone</h3>
-      <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Clears all local data from this browser. Your Google Sheet data is unaffected.</p>
-      <button class="btn btn-danger" onclick="clearAllData()">🗑 Clear All Local Data</button>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Clears all local browser data. Your Google Sheet is unaffected.</p>
+      <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑 Clear Local Data</button>
     </div>
   </section>
+</div>
 </div>
 
 <div id="toast"></div>
 <div id="syncOverlay">
   <div class="spin-card">
     <div class="spinner"></div>
-    <p id="overlayMsg">Syncing with Google Sheets…</p>
+    <p id="overlayMsg">Syncing…</p>
   </div>
 </div>
 
 <script>
-// ── APPS SCRIPT CODE ──────────────────────────────────────────────
-const APPS_SCRIPT_CODE = `const SH_HABITS = 'Habits';
-const SH_LOGS   = 'Logs';
+// ══════════════════════════════════════════════════════
+//  HARDCODED SHEET URL — never changes
+// ══════════════════════════════════════════════════════
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxl1nE1vao0JobFoUITGLmv8tp6awDW5wKkLCw9X2k7dyCKiS_E4mpdTscEfiYaw3m2/exec';
 
-function doPost(e) {
-  try {
-    const d  = JSON.parse(e.postData.contents);
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    if (d.action === 'push') {
-      writeHabits(ss, d.habits);
-      writeLogs(ss, d.logs);
-      return ok('saved');
-    }
-    if (d.action === 'pull') {
-      return ok({ habits: readHabits(ss), logs: readLogs(ss) });
-    }
-    if (d.action === 'ping') return ok('pong');
-  } catch(err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ok:false,error:err.message}))
-      .setMimeType(ContentService.MimeType.JSON);
+// ══════════════════════════════════════════════════════
+//  ACCOUNTS
+// ══════════════════════════════════════════════════════
+const ACCOUNTS = {
+  firdaus: { name:'Firdaus', password:'helo123',     avatar:'🌙', color:'#c8f55a' },
+  amel:    { name:'Amel',    password:'sunshine123', avatar:'🌸', color:'#f5a55a' }
+};
+const PARTNER = { firdaus:'amel', amel:'firdaus' };
+
+let currentUser = null;
+let selectedLoginUser = 'firdaus';
+
+function selectUser(u){
+  selectedLoginUser=u;
+  document.querySelectorAll('.user-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('ubtn-'+u).classList.add('selected');
+  document.getElementById('pwInput').value='';
+  document.getElementById('loginErr').textContent='';
+  document.getElementById('pwInput').focus();
+}
+function togglePw(){
+  const i=document.getElementById('pwInput');
+  i.type=i.type==='password'?'text':'password';
+}
+function doLogin(){
+  const pw=document.getElementById('pwInput').value;
+  if(pw===ACCOUNTS[selectedLoginUser].password){
+    currentUser=selectedLoginUser;
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('mainApp').classList.add('visible');
+    initApp();
+  } else {
+    document.getElementById('loginErr').textContent='Wrong password. Try again.';
+    document.getElementById('pwInput').value='';
+    document.getElementById('pwInput').focus();
   }
 }
-function doGet(e) {
-  if (e.parameter.action === 'ping') return ok('pong');
-  return ok('Habitly backend running');
+function logout(){
+  currentUser=null;
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('mainApp').classList.remove('visible');
+  document.getElementById('pwInput').value='';
+  document.getElementById('loginErr').textContent='';
 }
-function ok(payload) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ok:true,data:payload}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-function writeHabits(ss, habits) {
-  let sh = ss.getSheetByName(SH_HABITS) || ss.insertSheet(SH_HABITS);
-  sh.clearContents();
-  sh.appendRow(['id','name','icon','color','freq','createdAt']);
-  habits.forEach(h => sh.appendRow([h.id,h.name,h.icon,h.color,h.freq,h.createdAt]));
-}
-function writeLogs(ss, logs) {
-  let sh = ss.getSheetByName(SH_LOGS) || ss.insertSheet(SH_LOGS);
-  sh.clearContents();
-  sh.appendRow(['date','habitId','done','time']);
-  Object.entries(logs).forEach(([date,day]) => {
-    Object.entries(day).forEach(([key,val]) => {
-      if (!key.endsWith('_time'))
-        sh.appendRow([date, key, val?'TRUE':'FALSE', day[key+'_time']||'']);
-    });
-  });
-}
-function readHabits(ss) {
-  const sh = ss.getSheetByName(SH_HABITS);
-  if (!sh) return [];
-  return sh.getDataRange().getValues().slice(1)
-    .map(r => ({id:r[0],name:r[1],icon:r[2],color:r[3],freq:r[4],createdAt:r[5]}))
-    .filter(h => h.id);
-}
-function readLogs(ss) {
-  const sh = ss.getSheetByName(SH_LOGS);
-  if (!sh) return {};
-  const out = {};
-  sh.getDataRange().getValues().slice(1).forEach(r => {
-    const [date,habitId,done,time] = r;
-    if (!date || !habitId) return;
-    if (!out[date]) out[date] = {};
-    out[date][habitId] = (done === 'TRUE' || done === true);
-    if (time) out[date][habitId+'_time'] = time;
-  });
-  return out;
-}`;
 
-document.getElementById('scriptBox').textContent = APPS_SCRIPT_CODE;
-
-// ── DATA ─────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  DATA LAYER
+// ══════════════════════════════════════════════════════
 const EMOJIS=['🏃','💪','📚','🧘','💧','🥗','😴','✍️','🎯','🎨','🎵','🧹','💊','🚴','🌿','🍎','🧠','🌅','☕','🏋️'];
 let selectedEmoji=EMOJIS[0];
+
 function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
 function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
-let habits=load('hb_habits',[]);
-let logs=load('hb_logs',{});
-let sheetUrl=load('hb_sheet_url','');
-function saveAll(){save('hb_habits',habits);save('hb_logs',logs)}
+function getHabits(u){return load('hb_habits_'+u,[])}
+function getLogs(u){return load('hb_logs_'+u,{})}
+function setHabits(u,v){save('hb_habits_'+u,v)}
+function setLogs(u,v){save('hb_logs_'+u,v)}
+function myHabits(){return getHabits(currentUser)}
+function myLogs(){return getLogs(currentUser)}
+function partnerHabits(){return getHabits(PARTNER[currentUser])}
+function partnerLogs(){return getLogs(PARTNER[currentUser])}
 
-// ── UTILS ────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════
 function todayKey(){return new Date().toISOString().slice(0,10)}
 function fmtDate(d){return d.toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'})}
 function uid(){return Math.random().toString(36).slice(2,9)}
@@ -396,156 +453,209 @@ function isScheduled(h,ds){
   if(h.freq==='3x')return[1,3,5].includes(dow);
   return true;
 }
-function completionRate(id,days=7){
+function completionRate(habits,logs,days=7){
   let done=0,total=0;
   for(let i=0;i<days;i++){
     const d=new Date();d.setDate(d.getDate()-i);
     const k=d.toISOString().slice(0,10);
-    const h=habits.find(x=>x.id===id);
-    if(!h)continue;
-    if(isScheduled(h,k)){total++;if(logs[k]?.[id])done++;}
+    habits.forEach(h=>{if(isScheduled(h,k)){total++;if(logs[k]?.[h.id])done++;}});
   }
   return total?Math.round(done/total*100):0;
 }
-function streakFor(id){
+function streakFor(h,logs){
   let s=0;
   for(let i=0;;i++){
     const d=new Date();d.setDate(d.getDate()-i);
     const k=d.toISOString().slice(0,10);
-    const h=habits.find(x=>x.id===id);
-    if(!h)break;
     if(!isScheduled(h,k))continue;
-    if(logs[k]?.[id])s++;else break;
+    if(logs[k]?.[h.id])s++;else break;
   }
   return s;
 }
 function freqLabel(f){return{daily:'Daily',weekdays:'Weekdays',weekends:'Weekends','3x':'3×/Week'}[f]||f}
+function partnerName(){return ACCOUNTS[PARTNER[currentUser]].name}
+function partnerColor(){return ACCOUNTS[PARTNER[currentUser]].color}
+function myColor(){return ACCOUNTS[currentUser].color}
 
-// ── SYNC ─────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  GOOGLE SHEETS SYNC
+// ══════════════════════════════════════════════════════
 function setSyncState(state,label){
   const pill=document.getElementById('syncPill');
   pill.className='sync-pill '+state;
   document.getElementById('syncLabel').textContent=label||{disconnected:'Not connected',connected:'Sheets connected',syncing:'Syncing…'}[state];
 }
 async function sheetsReq(body){
-  if(!sheetUrl)throw new Error('No URL');
-  const r=await fetch(sheetUrl,{method:'POST',body:JSON.stringify(body)});
+  const r=await fetch(SHEET_URL,{method:'POST',body:JSON.stringify(body)});
   const j=await r.json();
   if(!j.ok)throw new Error(j.error||'Error');
   return j.data;
 }
 async function pushToSheets(silent=true){
-  if(!sheetUrl){if(!silent)toast('⚠️ No Sheets URL saved.');return;}
   setSyncState('syncing');
   if(!silent)showOverlay('Pushing to Google Sheets…');
-  try{await sheetsReq({action:'push',habits,logs});setSyncState('connected');if(!silent)toast('✅ Pushed to Sheets!');}
-  catch(e){setSyncState('disconnected','Sync failed');if(!silent)toast('❌ '+e.message);}
+  try{
+    await sheetsReq({
+      action:'push',
+      habits:{firdaus:getHabits('firdaus'),amel:getHabits('amel')},
+      logs:  {firdaus:getLogs('firdaus'),  amel:getLogs('amel')}
+    });
+    setSyncState('connected');
+    if(!silent)toast('✅ Pushed to Sheets!');
+  }catch(e){
+    setSyncState('disconnected','Sync failed');
+    if(!silent)toast('❌ '+e.message);
+  }
   hideOverlay();
 }
 async function pullFromSheets(){
-  if(!sheetUrl){toast('⚠️ No Sheets URL saved.');return;}
-  setSyncState('syncing');showOverlay('Pulling from Google Sheets…');
+  setSyncState('syncing');
+  showOverlay('Pulling from Google Sheets…');
   try{
     const d=await sheetsReq({action:'pull'});
-    if(Array.isArray(d.habits))habits=d.habits;
-    if(d.logs&&typeof d.logs==='object')logs=d.logs;
-    saveAll();setSyncState('connected');renderAll();toast('✅ Pulled from Sheets!');
-  }catch(e){setSyncState('disconnected','Sync failed');toast('❌ '+e.message);}
+    ['firdaus','amel'].forEach(u=>{
+      if(Array.isArray(d.habits[u]))setHabits(u,d.habits[u]);
+      if(d.logs[u]&&typeof d.logs[u]==='object')setLogs(u,d.logs[u]);
+    });
+    setSyncState('connected');
+    renderAll();
+    toast('✅ Pulled from Sheets!');
+  }catch(e){
+    setSyncState('disconnected','Sync failed');
+    toast('❌ '+e.message);
+  }
   hideOverlay();
 }
-async function testConnection(){
-  const url=document.getElementById('sheetUrl').value.trim();
-  if(!url){showConn('err','Enter a URL first.');return;}
-  showConn('info','Testing…');
-  try{
-    const r=await fetch(url,{method:'POST',body:JSON.stringify({action:'ping'})});
-    const j=await r.json();
-    j.ok?showConn('ok','✅ Connection successful! Click Save & Sync.'):showConn('err','❌ Server error.');
-  }catch{showConn('err','❌ Could not reach URL. Check deployment settings.');}
-}
-function saveSheetUrl(){
-  const url=document.getElementById('sheetUrl').value.trim();
-  if(!url){toast('Enter the Web App URL.');return;}
-  sheetUrl=url;save('hb_sheet_url',url);setSyncState('connected');toast('Saved! Syncing…');pushToSheets(false);
-}
-function showConn(type,msg){const el=document.getElementById('connStatus');el.style.display='block';el.className='conn-status '+type;el.textContent=msg;}
-function copyScript(){navigator.clipboard.writeText(APPS_SCRIPT_CODE).then(()=>toast('📋 Copied!')).catch(()=>toast('Select & copy manually.'));}
 let syncTimer;
 function scheduleSync(){clearTimeout(syncTimer);syncTimer=setTimeout(()=>pushToSheets(true),2000);}
 
-// ── EMOJI ────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  EMOJI PICKER
+// ══════════════════════════════════════════════════════
 function renderEmojiPicker(){
   document.getElementById('emojiPicker').innerHTML=EMOJIS.map(e=>
     `<div class="emoji-opt${e===selectedEmoji?' selected':''}" onclick="selectEmoji('${e}')">${e}</div>`).join('');
 }
 function selectEmoji(e){selectedEmoji=e;renderEmojiPicker();}
 
-// ── ADD HABIT ────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  ADD HABIT
+// ══════════════════════════════════════════════════════
 function addHabit(){
   const name=document.getElementById('habitName').value.trim();
   if(!name){toast('Please enter a habit name.');return;}
+  const habits=myHabits();
   habits.push({id:uid(),name,icon:selectedEmoji,color:document.getElementById('habitColor').value,freq:document.getElementById('habitFreq').value,createdAt:todayKey()});
-  saveAll();document.getElementById('habitName').value='';toast('Habit added! 🎉');renderAll();scheduleSync();
+  setHabits(currentUser,habits);
+  document.getElementById('habitName').value='';
+  toast('Habit added! 🎉');renderAll();scheduleSync();
 }
 
-// ── HABIT LIST ───────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  HABIT LIST
+// ══════════════════════════════════════════════════════
+let listView='mine';
+function setListView(v,btn){
+  listView=v;
+  document.querySelectorAll('#vt-mine,#vt-partner').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderHabitList();
+}
 function renderHabitList(){
+  const isP=listView==='partner';
+  const habits=isP?partnerHabits():myHabits();
+  const logs=isP?partnerLogs():myLogs();
+  document.getElementById('habitCountLabel').textContent=`${habits.length} habit${habits.length!==1?'s':''} — ${isP?partnerName()+"'s Habits":'My Habits'}`;
   const wrap=document.getElementById('habitList');
-  document.getElementById('habitCount').textContent=`${habits.length} habit${habits.length!==1?'s':''} tracked`;
-  if(!habits.length){wrap.innerHTML=`<div class="empty"><div class="big">🌱</div><p>No habits yet. Add your first one!</p></div>`;return;}
+  if(!habits.length){
+    wrap.innerHTML=`<div class="empty"><div class="big">${isP?'👀':'🌱'}</div><p>${isP?partnerName()+' has no habits yet.':'No habits yet. Add your first one!'}</p></div>`;
+    return;
+  }
   wrap.innerHTML=habits.map(h=>{
-    const streak=streakFor(h.id),rate=completionRate(h.id);
+    const streak=streakFor(h,logs),rate=completionRate([h],logs);
     return `<div class="habit-card">
       <div class="habit-icon" style="background:${h.color}22">${h.icon}</div>
-      <div class="habit-info"><div class="habit-name">${h.name}</div><div class="habit-meta">${freqLabel(h.freq)} · ${rate}% this week</div></div>
+      <div class="habit-info">
+        <div class="habit-name">${h.name}${isP?`<span class="readonly-tag">${partnerName()}</span>`:''}</div>
+        <div class="habit-meta">${freqLabel(h.freq)} · ${rate}% this week</div>
+      </div>
       <div class="habit-streak">🔥 ${streak}d</div>
-      <div class="habit-actions"><div class="icon-btn" onclick="deleteHabit('${h.id}')">🗑</div></div>
+      ${!isP?`<div class="icon-btn" onclick="deleteHabit('${h.id}')">🗑</div>`:''}
     </div>`;
   }).join('');
 }
 function deleteHabit(id){
   if(!confirm('Delete this habit?'))return;
-  habits=habits.filter(h=>h.id!==id);saveAll();renderAll();toast('Deleted.');scheduleSync();
+  setHabits(currentUser,myHabits().filter(x=>x.id!==id));
+  renderAll();toast('Deleted.');scheduleSync();
 }
 
-// ── CHECKLIST ────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  CHECKLIST
+// ══════════════════════════════════════════════════════
+let checkView='mine';
+function setCheckView(v,btn){
+  checkView=v;
+  document.querySelectorAll('#cv-mine,#cv-partner').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderChecklist();
+}
 function renderChecklist(){
   const today=todayKey();
+  const isP=checkView==='partner';
+  const habits=isP?partnerHabits():myHabits();
+  const logs=isP?partnerLogs():myLogs();
   const th=habits.filter(h=>isScheduled(h,today));
   const done=th.filter(h=>logs[today]?.[h.id]).length;
   const pct=th.length?Math.round(done/th.length*100):0;
   document.getElementById('checklistDate').textContent=fmtDate(new Date());
   document.getElementById('todayPct').textContent=pct+'%';
   const wrap=document.getElementById('checklistItems');
-  if(!habits.length){wrap.innerHTML=`<div class="empty"><div class="big">📋</div><p>Add some habits first!</p></div>`;return;}
-  if(!th.length){wrap.innerHTML=`<div class="empty"><div class="big">🎉</div><p>No habits scheduled today!</p></div>`;return;}
+  if(!th.length){
+    wrap.innerHTML=`<div class="empty"><div class="big">🎉</div><p>${isP?'No habits for '+partnerName()+' today.':'No habits scheduled today!'}</p></div>`;
+    return;
+  }
   wrap.innerHTML=th.map(h=>{
     const checked=logs[today]?.[h.id]||false;
     const time=logs[today]?.[h.id+'_time']||'';
-    return `<div class="check-card${checked?' done':''}" onclick="toggleCheck('${h.id}')">
-      <div style="width:38px;height:38px;border-radius:10px;background:${h.color}22;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">${h.icon}</div>
+    const doneClass=checked?(isP?'partner-done':'done'):'';
+    return `<div class="check-card ${doneClass}${isP?' readonly':''}" ${!isP?`onclick="toggleCheck('${h.id}')"`:''}>
+      <div style="width:36px;height:36px;border-radius:10px;background:${h.color}22;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">${h.icon}</div>
       <div class="checkmark">${checked?'✓':''}</div>
       <div class="check-label">${h.name}</div>
       ${time?`<div class="check-time">${time}</div>`:''}
+      ${isP&&checked?`<div style="font-size:.7rem;color:var(--accent2)">✓ ${partnerName()}</div>`:''}
     </div>`;
   }).join('');
 }
 function toggleCheck(id){
   const today=todayKey();
+  const logs=myLogs();
   if(!logs[today])logs[today]={};
   const was=logs[today][id];
   logs[today][id]=!was;
   if(!was){const t=new Date();logs[today][id+'_time']=t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});}
   else{delete logs[today][id+'_time'];}
-  saveAll();renderChecklist();renderProgress();scheduleSync();
+  setLogs(currentUser,logs);renderChecklist();renderProgress();scheduleSync();
 }
 
-// ── CALENDAR ─────────────────────────────────────────────────────
-let calYear,calMonth;
+// ══════════════════════════════════════════════════════
+//  CALENDAR
+// ══════════════════════════════════════════════════════
+let calYear,calMonth,calView='mine';
 function initCal(){const n=new Date();calYear=n.getFullYear();calMonth=n.getMonth();}
+function setCalView(v,btn){
+  calView=v;
+  document.querySelectorAll('#calv-mine,#calv-partner').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCalendar();
+}
 function renderCalendar(){
   const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('calMonthLabel').textContent=`${months[calMonth]} ${calYear}`;
+  const isP=calView==='partner';
+  const habits=isP?partnerHabits():myHabits();
+  const logs=isP?partnerLogs():myLogs();
   const firstDay=new Date(calYear,calMonth,1).getDay();
   const dim=new Date(calYear,calMonth+1,0).getDate();
   const todayStr=todayKey();
@@ -566,30 +676,58 @@ function renderCalendar(){
 function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
 function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
 
-// ── PROGRESS ─────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  PROGRESS
+// ══════════════════════════════════════════════════════
+let progView='mine';
+function setProgView(v,btn){
+  progView=v;
+  document.querySelectorAll('#pv-mine,#pv-partner').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProgressBars();
+}
+function makeRing(pct,color,label){
+  return `<div>
+    <div class="progress-ring">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="58" fill="none" stroke="var(--surface2)" stroke-width="10"/>
+        <circle cx="70" cy="70" r="58" fill="none" stroke="${color}" stroke-width="10"
+          stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="${364-(pct/100)*364}"/>
+      </svg>
+      <div class="progress-ring-text">
+        <span class="pct" style="color:${color}">${pct}%</span>
+        <span class="lbl">this week</span>
+      </div>
+    </div>
+    <div class="ring-name">${label}</div>
+  </div>`;
+}
 function renderProgress(){
-  let ts=0,td=0;
-  for(let i=0;i<7;i++){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const k=d.toISOString().slice(0,10);
-    habits.forEach(h=>{if(isScheduled(h,k)){ts++;if(logs[k]?.[h.id])td++;}});
-  }
-  const pct=ts?Math.round(td/ts*100):0;
-  document.getElementById('progressPct').textContent=pct+'%';
-  document.getElementById('progressCircle').style.strokeDashoffset=427-(pct/100)*427;
-  const best=habits.length?Math.max(...habits.map(h=>streakFor(h.id))):0;
+  const myH=myHabits(),myL=myLogs(),pH=partnerHabits(),pL=partnerLogs();
+  document.getElementById('progressRings').innerHTML=
+    makeRing(completionRate(myH,myL),myColor(),ACCOUNTS[currentUser].name)+
+    makeRing(completionRate(pH,pL),partnerColor(),partnerName());
   const today=todayKey();
-  const todayDone=habits.filter(h=>isScheduled(h,today)&&logs[today]?.[h.id]).length;
+  const myBest=myH.length?Math.max(...myH.map(h=>streakFor(h,myL))):0;
+  const pBest=pH.length?Math.max(...pH.map(h=>streakFor(h,pL))):0;
   document.getElementById('statsGrid').innerHTML=`
-    <div class="stat-card"><div class="stat-val" style="color:var(--accent)">${habits.length}</div><div class="stat-label">Total Habits</div></div>
-    <div class="stat-card"><div class="stat-val" style="color:var(--accent3)">${best}🔥</div><div class="stat-label">Best Streak</div></div>
-    <div class="stat-card"><div class="stat-val" style="color:var(--accent2)">${todayDone}</div><div class="stat-label">Done Today</div></div>`;
+    <div class="stat-card"><div class="stat-val" style="color:${myColor()}">${myH.length}</div><div class="stat-label">My Habits</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:${partnerColor()}">${pH.length}</div><div class="stat-label">${partnerName()}'s Habits</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--accent3)">${Math.max(myBest,pBest)}🔥</div><div class="stat-label">Best Streak</div></div>`;
+  renderProgressBars();
+}
+function renderProgressBars(){
+  const isP=progView==='partner';
+  const habits=isP?partnerHabits():myHabits();
+  const logs=isP?partnerLogs():myLogs();
   const bw=document.getElementById('habitProgressBars');
-  if(!habits.length){bw.innerHTML='<p style="color:var(--muted);font-size:.88rem">No habits yet.</p>';return;}
-  bw.innerHTML=habits.map(h=>{const r=completionRate(h.id,7);return`<div class="habit-progress-item"><div class="hp-header"><span>${h.icon} ${h.name}</span><span style="color:var(--muted)">${r}%</span></div><div class="hp-bar-bg"><div class="hp-bar" style="width:${r}%;background:${h.color}"></div></div></div>`;}).join('');
+  if(!habits.length){bw.innerHTML=`<p style="color:var(--muted);font-size:.85rem">No habits yet.</p>`;return;}
+  bw.innerHTML=habits.map(h=>{const r=completionRate([h],logs,7);return`<div class="habit-progress-item"><div class="hp-header"><span>${h.icon} ${h.name}</span><span style="color:var(--muted)">${r}%</span></div><div class="hp-bar-bg"><div class="hp-bar" style="width:${r}%;background:${h.color}"></div></div></div>`;}).join('');
 }
 
-// ── TABS ─────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════
 function showTab(name,btn){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -599,21 +737,38 @@ function showTab(name,btn){
   if(name==='checklist')renderChecklist();
   if(name==='calendar')renderCalendar();
   if(name==='progress')renderProgress();
-  if(name==='settings')document.getElementById('sheetUrl').value=sheetUrl||'';
 }
 
-// ── OVERLAY + TOAST ───────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  OVERLAY + TOAST
+// ══════════════════════════════════════════════════════
 function showOverlay(msg){document.getElementById('overlayMsg').textContent=msg;document.getElementById('syncOverlay').classList.add('show');}
 function hideOverlay(){document.getElementById('syncOverlay').classList.remove('show');}
 let toastTimer;
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500);}
-function clearAllData(){if(!confirm('Delete ALL local data?'))return;habits=[];logs={};saveAll();renderAll();toast('Cleared.');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600);}
+function clearAllData(){if(!confirm('Clear ALL local data?'))return;['firdaus','amel'].forEach(u=>{setHabits(u,[]);setLogs(u,{});});renderAll();toast('Cleared.');}
 
-// ── INIT ─────────────────────────────────────────────────────────
-function renderAll(){renderHabitList();renderChecklist();renderProgress();}
-document.getElementById('headerDate').textContent=fmtDate(new Date());
-renderEmojiPicker();initCal();renderAll();
-if(sheetUrl)setSyncState('connected');
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+function initApp(){
+  const acc=ACCOUNTS[currentUser];
+  const partner=ACCOUNTS[PARTNER[currentUser]];
+  document.getElementById('userDot').style.background=acc.color;
+  document.getElementById('userNameBadge').textContent=acc.avatar+' '+acc.name;
+  document.getElementById('vt-partner').textContent=partner.name+"'s Habits";
+  document.getElementById('cv-partner').textContent=partner.name+"'s Habits";
+  document.getElementById('calv-partner').textContent=partner.name+"'s";
+  document.getElementById('pv-partner').textContent=partner.name;
+  document.getElementById('habitColor').value=acc.color;
+  setSyncState('connected');
+  renderAll();
+  pullFromSheets();
+}
+function renderAll(){
+  renderHabitList();renderChecklist();renderProgress();
+  if(document.getElementById('tab-calendar').classList.contains('active'))renderCalendar();
+}
 </script>
 </body>
 </html>
