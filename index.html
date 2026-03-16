@@ -642,8 +642,8 @@ function toggleCheck(id){
 // ══════════════════════════════════════════════════════
 //  CALENDAR
 // ══════════════════════════════════════════════════════
-let calYear,calMonth,calView='mine';
-function initCal(){const n=new Date();calYear=n.getFullYear();calMonth=n.getMonth();}
+let calYear=new Date().getFullYear(),calMonth=new Date().getMonth(),calView='mine';
+function initCal(){calYear=new Date().getFullYear();calMonth=new Date().getMonth();}
 function setCalView(v,btn){
   calView=v;
   document.querySelectorAll('#calv-mine,#calv-partner').forEach(b=>b.classList.remove('active'));
