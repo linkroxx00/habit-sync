@@ -523,9 +523,10 @@ async function pullFromSheets(silent=false){
           Object.keys(d.logs[u][date]).forEach(key=>{
             const val=d.logs[u][date][key];
             if(key.endsWith('_time')){
-              normalized[date][key]=val;
+              normalized[date][key]=String(val);
             } else {
-              normalized[date][key]=(val===true||val==='TRUE'||val==='true');
+              // handle all possible formats: boolean true, string 'TRUE', string 'true', number 1
+              normalized[date][key]=(val===true||val===1||String(val).toUpperCase()==='TRUE');
             }
           });
         });
@@ -644,13 +645,22 @@ function renderChecklist(){
 }
 function toggleCheck(id){
   const today=todayKey();
-  const logs=myLogs();
+  // read fresh from localStorage every time
+  const logs=JSON.parse(localStorage.getItem('hb_logs_'+currentUser)||'{}');
   if(!logs[today])logs[today]={};
-  const was=logs[today][id];
+  const was=logs[today][id]||false;
   logs[today][id]=!was;
-  if(!was){const t=new Date();logs[today][id+'_time']=t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});}
-  else{delete logs[today][id+'_time'];}
-  setLogs(currentUser,logs);renderChecklist();renderProgress();pushToSheets(false);
+  if(!was){
+    const t=new Date();
+    logs[today][id+'_time']=t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  } else {
+    delete logs[today][id+'_time'];
+  }
+  // save directly to localStorage
+  localStorage.setItem('hb_logs_'+currentUser, JSON.stringify(logs));
+  renderChecklist();
+  renderProgress();
+  pushToSheets(true);
 }
 
 // ══════════════════════════════════════════════════════
@@ -789,3 +799,5 @@ function renderAll(){
 </script>
 </body>
 </html>
+
+
