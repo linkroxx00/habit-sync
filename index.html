@@ -515,7 +515,22 @@ async function pullFromSheets(){
     const d=await sheetsReq({action:'pull'});
     ['firdaus','amel'].forEach(u=>{
       if(Array.isArray(d.habits[u]))setHabits(u,d.habits[u]);
-      if(d.logs[u]&&typeof d.logs[u]==='object')setLogs(u,d.logs[u]);
+      if(d.logs[u]&&typeof d.logs[u]==='object'){
+        // normalize done values — sheet may return 'TRUE'/'FALSE' strings or booleans
+        const normalized={};
+        Object.keys(d.logs[u]).forEach(date=>{
+          normalized[date]={};
+          Object.keys(d.logs[u][date]).forEach(key=>{
+            const val=d.logs[u][date][key];
+            if(key.endsWith('_time')){
+              normalized[date][key]=val;
+            } else {
+              normalized[date][key]=(val===true||val==='TRUE'||val==='true');
+            }
+          });
+        });
+        setLogs(u,normalized);
+      }
     });
     setSyncState('connected');
     renderAll();
