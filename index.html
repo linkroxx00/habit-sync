@@ -520,12 +520,15 @@ async function pullFromSheets(silent=false){
       if(Array.isArray(d.habits[u]))setHabits(u,d.habits[u]);
       if(d.logs[u]&&typeof d.logs[u]==='object'){
         const normalized={};
-        Object.keys(d.logs[u]).forEach(date=>{
+        Object.keys(d.logs[u]).forEach(rawDate=>{
+          // strip leading apostrophe that was added to prevent Sheets date conversion
+          const date=String(rawDate).replace(/^'+/,'').trim();
           normalized[date]={};
-          Object.keys(d.logs[u][date]).forEach(key=>{
-            const val=d.logs[u][date][key];
+          Object.keys(d.logs[u][rawDate]).forEach(key=>{
+            const val=d.logs[u][rawDate][key];
             if(key.endsWith('_time')){
-              normalized[date][key]=String(val);
+              // strip apostrophe from time too
+              normalized[date][key]=String(val).replace(/^'+/,'').trim();
             } else {
               normalized[date][key]=(val===true||val===1||String(val).toUpperCase()==='TRUE');
             }
