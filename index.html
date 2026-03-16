@@ -376,7 +376,6 @@
 //  HARDCODED SHEET URL — never changes
 // ══════════════════════════════════════════════════════
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyPQp3AGMhcmAyd84LaO1Q1qRbLPHzK0N-Ie1Diop5_eX-jLrH3rpxo5AWL4cob-Dww/exec';
-  
 
 // ══════════════════════════════════════════════════════
 //  ACCOUNTS
@@ -431,10 +430,10 @@ let selectedEmoji=EMOJIS[0];
 
 function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
 function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
-function getHabits(u){return load('hb_habits_'+u,[])}
-function getLogs(u){return load('hb_logs_'+u,{})}
-function setHabits(u,v){save('hb_habits_'+u,v)}
-function setLogs(u,v){save('hb_logs_'+u,v)}
+function getHabits(u){const v=load('hb_habits_'+u,[]);return Array.isArray(v)?v:[];}
+function getLogs(u){const v=load('hb_logs_'+u,{});return(v&&typeof v==='object'&&!Array.isArray(v))?v:{};}
+function setHabits(u,v){save('hb_habits_'+u,Array.isArray(v)?v:[]);}
+function setLogs(u,v){save('hb_logs_'+u,(v&&typeof v==='object'&&!Array.isArray(v))?v:{});}
 function myHabits(){return getHabits(currentUser)}
 function myLogs(){return getLogs(currentUser)}
 function partnerHabits(){return getHabits(PARTNER[currentUser])}
@@ -637,7 +636,7 @@ function toggleCheck(id){
   logs[today][id]=!was;
   if(!was){const t=new Date();logs[today][id+'_time']=t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});}
   else{delete logs[today][id+'_time'];}
-  setLogs(currentUser,logs);renderChecklist();renderProgress();scheduleSync();
+  setLogs(currentUser,logs);renderChecklist();renderProgress();pushToSheets(false);
 }
 
 // ══════════════════════════════════════════════════════
@@ -773,8 +772,5 @@ function renderAll(){
 </script>
 </body>
 </html>
-
-
-
 
 
