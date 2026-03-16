@@ -508,9 +508,9 @@ async function pushToSheets(silent=true){
   }
   hideOverlay();
 }
-async function pullFromSheets(){
+async function pullFromSheets(silent=false){
   setSyncState('syncing');
-  showOverlay('Pulling from Google Sheets…');
+  if(!silent)showOverlay('Pulling from Google Sheets…');
   try{
     const d=await sheetsReq({action:'pull'});
     ['firdaus','amel'].forEach(u=>{
@@ -533,13 +533,12 @@ async function pullFromSheets(){
       }
     });
     setSyncState('connected');
-    renderAll();
-    toast('✅ Pulled from Sheets!');
+    if(!silent)toast('✅ Pulled from Sheets!');
   }catch(e){
     setSyncState('disconnected','Sync failed');
-    toast('❌ '+e.message);
+    if(!silent)toast('❌ '+e.message);
   }
-  hideOverlay();
+  if(!silent)hideOverlay();
 }
 let syncTimer;
 function scheduleSync(){clearTimeout(syncTimer);syncTimer=setTimeout(()=>pushToSheets(true),2000);}
@@ -766,7 +765,7 @@ function clearAllData(){if(!confirm('Clear ALL local data?'))return;['firdaus','
 // ══════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════
-function initApp(){
+async function initApp(){
   const acc=ACCOUNTS[currentUser];
   const partner=ACCOUNTS[PARTNER[currentUser]];
   document.getElementById('userDot').style.background=acc.color;
@@ -777,8 +776,11 @@ function initApp(){
   document.getElementById('pv-partner').textContent=partner.name;
   document.getElementById('habitColor').value=acc.color;
   setSyncState('connected');
+  // render local data first so UI is not blank
   renderAll();
-  pullFromSheets();
+  // then pull from sheets and re-render with fresh data
+  await pullFromSheets(true);
+  renderAll();
 }
 function renderAll(){
   renderHabitList();renderChecklist();renderProgress();
@@ -787,6 +789,3 @@ function renderAll(){
 </script>
 </body>
 </html>
-
-
-
